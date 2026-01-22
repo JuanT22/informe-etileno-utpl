@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Etileno: Informe Interactivo UTPL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #005eb8; /* Azul UTPL más vibrante */
+            --secondary: #002a4b; /* Azul oscuro */
+            --accent: #fdb913; /* Amarillo/Dorado */
+            --bio-green: #27ae60; /* Verde para bio-procesos */
+            --ind-orange: #e67e22; /* Naranja industrial */
+            --chem-purple: #8e44ad; /* Púrpura para química */
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --danger: #c0392b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--light); color: var(--dark); line-height: 1.6; scroll-behavior: smooth; }
+        
+        /* Typography & Helpers */
+        h1, h2, h3 { font-weight: 700; letter-spacing: -0.5px; }
+        .highlight { color: var(--accent); font-weight: bold; }
+        .section-icon { margin-right: 10px; color: var(--primary); }
+        sub { font-size: 0.7em; vertical-align: sub; }
+        sup { font-size: 0.7em; vertical-align: super; }
+
+        /* --- HEADER & HERO --- */
+        header {
+            background: linear-gradient(rgba(0, 42, 75, 0.85), rgba(0, 94, 184, 0.8)), url('https://images.unsplash.com/photo-1532187643603-ba3444635531?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+        }
+        
+        .utpl-logo { 
+            font-weight: 800; font-size: 1.8rem; letter-spacing: 3px; 
+            border: 3px solid var(--accent); padding: 8px 25px; 
+            display: inline-block; margin-bottom: 20px; color: var(--accent);
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        
+        h1 { font-size: 3.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .subtitle { font-size: 1.4rem; opacity: 0.95; font-weight: 300; }
+        .authors { margin-top: 2rem; font-size: 1rem; background: rgba(255,255,255,0.1); display: inline-block; padding: 10px 20px; border-radius: 30px; }
+        .authors i { margin-right: 8px; color: var(--accent); }
+
+        /* --- NAVIGATION --- */
+        nav {
+            background: var(--secondary);
+            position: sticky; top: 0; z-index: 1000;
+            display: flex; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            color: #ddd; padding: 18px 25px; text-decoration: none;
+            font-weight: 600; transition: 0.3s; display: flex; align-items: center;
+            border-bottom: 3px solid transparent;
+        }
+        nav a i { margin-right: 8px; font-size: 1.1rem; }
+        nav a:hover { background: rgba(255,255,255,0.05); color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* --- SECTIONS GENERAL --- */
+        section { padding: 5rem 1rem; max-width: 1200px; margin: 0 auto; }
+        h2 { 
+            color: var(--secondary); 
+            font-size: 2.2rem;
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-bottom: 15px;
+        }
+        h2::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 80px; height: 4px; background: linear-gradient(to right, var(--accent), var(--primary));
+        }
+
+        /* Intro Styling */
+        #intro { background: white; border-radius: 0 0 20px 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .intro-box { display: flex; gap: 30px; align-items: center; margin-top: 30px; }
+        .fact-card { background: #eef2f7; padding: 25px; border-radius: 15px; border-left: 5px solid var(--primary); flex: 1; display: flex; align-items: start; }
+        .fact-card i { font-size: 2.5rem; color: var(--primary); margin-right: 20px; }
+
+        /* --- MOLECULE SECTION --- */
+        #molecule { background: linear-gradient(to bottom right, #fff, #f0f4ff); }
+        .molecule-flex { display: flex; gap: 40px; align-items: center; }
+        .molecule-visual-container { flex: 1; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; }
+        .molecule-text { flex: 1; }
+        
+        /* Visualización CSS de C2H4 (Mejorada) */
+        .ethylene-visual { position: relative; width: 240px; height: 180px; margin: 0 auto 20px auto; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
+        .atom { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; box-shadow: inset -3px -3px 10px rgba(0,0,0,0.2); z-index: 2; }
+        .carbon { width: 50px; height: 50px; background: #333; font-size: 1.2rem; }
+        .hydrogen { width: 35px; height: 35px; background: var(--primary); font-size: 1rem; }
+        .bond { position: absolute; background: #7f8c8d; height: 8px; transform-origin: left center; border-radius: 4px; z-index: 1; }
+        .double-bond { height: 16px; border-top: 4px solid #555; border-bottom: 4px solid #555; background: transparent; }
+
+        /* --- INTERACTIVE PROCESS DIAGRAM --- */
+        #process { background-color: white; }
+        .process-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 12px 25px; border: none; background: #e9ecef; cursor: pointer; 
+            border-radius: 30px; font-weight: 600; color: var(--secondary); transition: 0.3s; display: flex; align-items: center;
+        }
+        .tab-btn i { margin-right: 10px; }
+        .tab-btn:hover { background: #dde1e6; transform: translateY(-2px); }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(0,94,184,0.3); }
+        .tab-btn.active.green-mode { background: var(--bio-green); }
+
+        .process-content { display: none; animation: fadeIn 0.5s; padding: 20px; border-radius: 15px; background: #f8fafd; border: 2px solid #eef2f7; }
+        .process-content.active { display: block; }
+
+        /* Diagrama Estilizado */
+        .diagram-scroll { overflow-x: auto; padding: 20px 0; text-align: center; }
+        .flow-row { display: flex; justify-content: center; align-items: center; gap: 25px; min-width: 700px; margin-bottom: 30px; }
+        
+        .unit-box {
+            background: white; border-bottom: 4px solid var(--primary);
+            padding: 20px 15px; border-radius: 12px; width: 160px;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .unit-box i.unit-icon { font-size: 2rem; color: var(--primary); margin-bottom: 10px; transition: 0.3s; }
+        .unit-box h4 { font-size: 0.9rem; margin-bottom: 5px; }
+        
+        .unit-box:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,94,184,0.2); background: var(--primary); }
+        .unit-box:hover h4, .unit-box:hover i.unit-icon { color: white; }
+        .unit-box:hover::after { content: "Click para info"; color: var(--accent); font-size: 0.7rem; font-weight: bold; }
+        
+        .arrow { font-size: 2rem; color: var(--accent); opacity: 0.7; }
+
+        /* Estilos específicos para otros procesos */
+        .bio-process .unit-box { border-color: var(--bio-green); }
+        .bio-process .unit-box i.unit-icon { color: var(--bio-green); }
+        .bio-process .unit-box:hover { background: var(--bio-green); }
+        .bio-process .arrow { color: var(--bio-green); }
+
+        /* --- USES CARDS --- */
+        #uses { background: linear-gradient(to bottom, #f8f9fa, #e9ecef); }
+        .uses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .use-card {
+            background: white; padding: 35px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); transition: 0.4s; position: relative; overflow: hidden;
+        }
+        .use-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--secondary); }
+        .use-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+        .card-icon-header { font-size: 3rem; margin-bottom: 20px; }
+        .use-card.pe .card-icon-header { color: var(--primary); } .use-card.pe::before { background: var(--primary); }
+        .use-card.oxide .card-icon-header { color: var(--chem-purple); } .use-card.oxide::before { background: var(--chem-purple); }
+        .use-card.pvc .card-icon-header { color: var(--ind-orange); } .use-card.pvc::before { background: var(--ind-orange); }
+
+        /* --- COMPARISON (PROS/CONS) --- */
+        #comparison { background: white; }
+        .comparison-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .comp-column h3 { text-align: center; margin-bottom: 20px; padding: 10px; border-radius: 8px; color: white; }
+        .comp-column.traditional h3 { background: var(--secondary); }
+        .comp-column.green h3 { background: var(--bio-green); }
+        
+        .comp-item { background: #fff; border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: start; }
+        .comp-item i { font-size: 1.2rem; margin-right: 15px; margin-top: 4px; }
+        .comp-item.pro i { color: var(--bio-green); }
+        .comp-item.con i { color: var(--danger); }
+
+        /* --- FUTURE SECTION --- */
+        #future { background: #f8fafd; }
+        .future-container { display: flex; gap: 40px; align-items: flex-start; }
+        .future-image { flex: 1; height: 400px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .future-image img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .future-image:hover img { transform: scale(1.05); }
+        .future-content { flex: 1; display: grid; gap: 20px; }
+        
+        .info-block { background: #fff; padding: 25px; border-radius: 15px; border: 1px solid #eee; display: flex; gap: 15px; }
+        .info-block i { font-size: 2rem; }
+        .info-block.safety i { color: var(--danger); }
+        .info-block.eco i { color: var(--bio-green); }
+
+        /* --- FOOTER --- */
+        footer { background: var(--secondary); color: rgba(255,255,255,0.7); padding: 4rem 1rem; text-align: center; position: relative; }
+        footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: linear-gradient(to right, var(--accent), var(--bio-green)); }
+        .footer-logo { font-size: 1.5rem; color: white; font-weight: bold; margin-bottom: 20px; display: inline-block; }
+
+        /* --- MODAL MEJORADO --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,42,75,0.8); backdrop-filter: blur(8px); }
+        .modal-content {
+            background: linear-gradient(to bottom right, #ffffff, #f4f7f6);
+            margin: 10% auto; padding: 30px;
+            width: 90%; max-width: 550px;
+            border-radius: 20px; position: relative;
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .close { color: var(--danger); float: right; font-size: 30px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .close:hover { transform: rotate(90deg); }
+        .modal-header { display: flex; align-items: center; margin-bottom: 20px; color: var(--primary); }
+        .modal-header i { font-size: 2rem; margin-right: 15px; }
+        .badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .badge-temp { background: #ffdad5; color: var(--danger); }
+
+        /* Animations y Media Queries */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            nav a { padding: 15px; font-size: 0.8rem; flex-direction: column; text-align: center; }
+            nav a i { margin-bottom: 5px; margin-right: 0; }
+            .molecule-flex, .intro-box, .future-container, .comparison-container { flex-direction: column; }
+            .future-image { height: 250px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="utpl-logo">UTPL</div>
+        <h1>El Etileno</h1>
+        <p class="subtitle">La molécula que construyó el mundo moderno</p>
+        <div class="authors">
+            <i class="fas fa-users"></i> Valarezo, Medina, Soto, Verdugo
+        </div>
+    </header>
+
+    <nav>
+        <a href="#intro"><i class="fas fa-info-circle"></i> Intro</a>
+        <a href="#molecule"><i class="fas fa-atom"></i> Molécula</a>
+        <a href="#process"><i class="fas fa-cogs"></i> Procesos</a>
+        <a href="#comparison"><i class="fas fa-balance-scale"></i> Ventajas</a>
+        <a href="#uses"><i class="fas fa-boxes-packing"></i> Usos</a>
+        <a href="#future"><i class="fas fa-seedling"></i> Futuro</a>
+    </nav>
+
+    <section id="intro">
+        <h2><i class="fas fa-crown section-icon"></i>El Rey de la Petroquímica</h2>
+        <p class="lead">El etileno (C<sub>2</sub>H<sub>4</sub>) no es solo un gas; es el cimiento de la economía industrial moderna. Es el compuesto orgánico de mayor producción mundial.</p>
+        
+        <div class="intro-box">
+            <div style="flex: 1;">
+                <p>Pasó de ser una curiosidad científica en el siglo XVII ("gas olefiant") a ser el indicador clave del desarrollo industrial de una nación. Si miras a tu alrededor, hay un 90% de probabilidad de que veas algo derivado de él.</p>
+            </div>
+            <div class="fact-card">
+                <i class="fas fa-temperature-low"></i>
+                <div>
+                    <strong>Dato Crítico de Ingeniería:</strong>
+                    <p>Es un gas incoloro e inflamable con un punto de ebullición de <span class="highlight">-103.7°C</span>. Esto obliga a usar ingeniería criogénica extrema para manejarlo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="molecule">
+        <h2><i class="fas fa-microscope section-icon"></i>Estructura Molecular</h2>
+        <div class="molecule-flex">
+             <div class="molecule-visual-container">
+                <div class="ethylene-visual">
+                    <div class="atom carbon" style="left: 70px; top: 65px;">C</div>
+                    <div class="atom carbon" style="left: 120px; top: 65px;">C</div>
+                    <div class="bond double-bond" style="width: 50px; left: 95px; top: 82px;"></div>
+                    <div class="atom hydrogen" style="left: 35px; top: 25px;">H</div>
+                    <div class="bond" style="width: 45px; left: 50px; top: 45px; transform: rotate(45deg);"></div>
+                    
+                    <div class="atom hydrogen" style="left: 35px; top: 125px;">H</div>
+                    <div class="bond" style="width: 45px; left: 50px; top: 105px; transform: rotate(-45deg);"></div>
+
+                    <div class="atom hydrogen" style="left: 175px; top: 25px;">H</div>
+                    <div class="bond" style="width: 45px; left: 145px; top: 45px; transform: rotate(-45deg);"></div>
+
+                    <div class="atom hydrogen" style="left: 175px; top: 125px;">H</div>
+                    <div class="bond" style="width: 45px; left: 145px; top: 105px; transform: rotate(45deg);"></div>
+                </div>
+                <p style="font-weight: bold; color: var(--primary);">Modelo C<sub>2</sub>H<sub>4</sub></p>
+            </div>
+
+            <div class="molecule-text">
+                <h3>El secreto está en el doble enlace</h3>
+                <p>La reactividad del etileno proviene de su doble enlace carbono-carbono (hibridación sp<sup>2</sup>).</p>
+                <ul style="list-style: none; margin-top: 20px;">
+                    <li style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: var(--accent); margin-right: 10px;"></i><strong>Geometría Plana:</strong> Ángulos de 121.3°, ideal para apilarse.</li>
+                    <li style="margin-bottom: 15px;"><i class="fas fa-bolt" style="color: var(--accent); margin-right: 10px;"></i><strong>Enlace π:</strong> Una nube de electrones "expuesta" que invita a otras moléculas a reaccionar, facilitando la polimerización.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="process">
+        <h2><i class="fas fa-industry section-icon"></i>Ingeniería de Procesos</h2>
+        <p style="text-align: center; margin-bottom: 20px;">Haz clic en las unidades de los diagramas para revelar sus secretos de operación.</p>
+        
+        <div class="process-tabs">
+            <button class="tab-btn active" onclick="openProcess(event, 'steam')"><i class="fas fa-fire"></i> Steam Cracking (Actual)</button>
+            <button class="tab-btn green-mode" onclick="openProcess(event, 'deshidratacion')"><i class="fas fa-leaf"></i> Bio-Etileno (Verde)</button>
+        </div>
+
+        <div id="steam" class="process-content active">
+            <h3 style="text-align: center; color: var(--ind-orange);">Proceso de Pirólisis (Steam Cracking)</h3>
+            <p style="text-align: center; margin-bottom: 30px;">El método dominante (95%+). Fuerza bruta térmica para romper moléculas.</p>
+            
+            <div class="diagram-scroll">
+                <div class="flow-row">
+                     <div class="unit-box" onclick="showModal('Horno H-200', 'Pirólisis Térmica Extrema', '850°C (Milisegundos)', 'Aquí ocurre la magia. Se inyecta vapor y nafta a temperaturas infernales para romper los enlaces C-C instantáneamente mediante radicales libres.', 'fa-fire-alt')">
+                        <i class="fas fa-fire-alt unit-icon"></i>
+                        <h4>Horno Pirólisis</h4>
+                        <small>H-200</small>
+                    </div>
+                    <div class="arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    <div class="unit-box" onclick="showModal('TLE (Quench)', 'Enfriamiento Súbito', 'Alta Presión', 'Congela la reacción instantáneamente para evitar que el etileno se degrade. Recupera energía generando vapor de alta presión.', 'fa-snowflake')">
+                        <i class="fas fa-snowflake unit-icon"></i>
+                        <h4>TLE (Quench)</h4>
+                        <small>Intercambiador</small>
+                    </div>
+                    <div class="arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    
+                    <div class="unit-box" onclick="showModal('Lavado Cáustico', 'Absorción de Gases Ácidos', 'T. Ambiente', 'Usa sosa cáustica (NaOH) para lavar el gas y eliminar impurezas corrosivas como H₂S y CO₂ que dañarían los equipos siguientes.', 'fa-soap')">
+                        <i class="fas fa-soap unit-icon"></i>
+                        <h4>Lavado Cáustico</h4>
+                        <small>Torre T-201</small>
+                    </div>
+                </div>
+
+                <div class="flow-row">
+                    <div class="arrow" style="transform: rotate(90deg);"><i class="fas fa-long-arrow-alt-right"></i></div>
+                </div>
+
+                <div class="flow-row">
+                    <div class="unit-box" onclick="showModal('Tren Criogénico', 'Destilación Fraccionada', '-100°C a -160°C', 'El corazón de la separación. Una serie de torres gigantes (Desmetanizadora, Desetanizadora) que separan los componentes por sus diferentes puntos de ebullición usando frío extremo.', 'fa-icicles')">
+                        <i class="fas fa-icicles unit-icon"></i>
+                        <h4>Tren Criogénico</h4>
+                        <small>T-205</small>
+                    </div>
+                    <div class="arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    
+                    <div class="unit-box" onclick="showModal('Producto Final', 'Almacenamiento', '-103°C o 20 bar', 'Etileno Grado Polímero (99.9% de pureza). Listo para ser convertido en plástico o químicos.', 'fa-check-circle')" style="border-color: var(--bio-green); background: #eafaf1; box-shadow: none;">
+                        <i class="fas fa-check-circle unit-icon" style="color: var(--bio-green);"></i>
+                        <h4>Producto Final</h4>
+                        <small>Etileno 99.9%</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="deshidratacion" class="process-content bio-process">
+             <h3 style="text-align: center; color: var(--bio-green);">Deshidratación de Etanol (Ruta Verde)</h3>
+             <p style="text-align: center; margin-bottom: 30px;">Usando bioetanol (de caña de azúcar o maíz) como materia prima renovable.</p>
+             <div class="diagram-scroll">
+                <div class="flow-row">
+                    <div class="unit-box" onclick="showModal('Vaporizador', 'Cambio de Fase', '120°C', 'El etanol líquido se calienta hasta convertirse en vapor antes de entrar al reactor.', 'fa-wind', true)">
+                        <i class="fas fa-wind unit-icon"></i>
+                        <h4>Vaporizador</h4>
+                        <small>E-101</small>
+                    </div>
+                    <div class="arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    <div class="unit-box" onclick="showModal('Reactor Catalítico', 'Deshidratación Endotérmica', '300°C - 400°C', 'Usa catalizadores ácidos (Alúmina o Zeolitas) para arrancar una molécula de agua al etanol: C₂H₅OH → C₂H₄ + H₂O.', 'fa-flask', true)">
+                        <i class="fas fa-flask unit-icon"></i>
+                        <h4>Reactor Catalítico</h4>
+                        <small>Lecho Fijo</small>
+                    </div>
+                    <div class="arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    <div class="unit-box" onclick="showModal('Separador de Fases', 'Condensación', 'T. Ambiente', 'Se enfría la mezcla. El agua se condensa y se separa por el fondo, el gas etileno sale por el tope.', 'fa-filter', true)">
+                        <i class="fas fa-filter unit-icon"></i>
+                        <h4>Separador</h4>
+                        <small>C-101</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparison">
+        <h2><i class="fas fa-balance-scale section-icon"></i>Comparativa de Tecnologías</h2>
+        <div class="comparison-container">
+            <div class="comp-column traditional">
+                <h3><i class="fas fa-fire"></i> Steam Cracking (Tradicional)</h3>
+                <div class="comp-item pro">
+                    <i class="fas fa-thumbs-up"></i>
+                    <p><strong>Escala Masiva:</strong> Produce el 95% del etileno mundial. Tecnología muy madura.</p>
+                </div>
+                <div class="comp-item pro">
+                    <i class="fas fa-thumbs-up"></i>
+                    <p><strong>Flexibilidad:</strong> Puede usar nafta, etano o gas propano como alimentación.</p>
+                </div>
+                <div class="comp-item con">
+                    <i class="fas fa-thumbs-down"></i>
+                    <p><strong>Huella de Carbono:</strong> Proceso intensivo en energía (hornos a 850°C) que genera mucho CO₂.</p>
+                </div>
+                <div class="comp-item con">
+                    <i class="fas fa-thumbs-down"></i>
+                    <p><strong>Separación Compleja:</strong> Requiere un tren criogénico muy costoso para separar la mezcla de gases.</p>
+                </div>
+            </div>
+
+            <div class="comp-column green">
+                <h3><i class="fas fa-leaf"></i> Deshidratación (Bio-Etileno)</h3>
+                <div class="comp-item pro">
+                    <i class="fas fa-thumbs-up"></i>
+                    <p><strong>Eco-Amigable:</strong> Huella de carbono neutral al usar plantas que absorbieron CO₂ previamente.</p>
+                </div>
+                <div class="comp-item pro">
+                    <i class="fas fa-thumbs-up"></i>
+                    <p><strong>Menor Complejidad:</strong> El producto sale más puro, reduciendo costos de separación (No hay metano).</p>
+                </div>
+                <div class="comp-item con">
+                    <i class="fas fa-thumbs-down"></i>
+                    <p><strong>Dependencia Agrícola:</strong> Compite con la producción de alimentos y depende de cosechas (caña, maíz).</p>
+                </div>
+                <div class="comp-item con">
+                    <i class="fas fa-thumbs-down"></i>
+                    <p><strong>Costo:</strong> Actualmente es más caro producir bioetanol que extraer gas natural.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="uses">
+        <h2><i class="fas fa-project-diagram section-icon"></i>El Árbol Petroquímico</h2>
+        <p>El etileno es el "ladrillo de construcción" para el 30% de todos los productos petroquímicos.</p>
+        <div class="uses-grid">
+            <div class="use-card pe">
+                <i class="fas fa-plastic-resins card-icon-header"></i>
+                <h3>Polietilenos (60%)</h3>
+                <p>El plástico más común del mundo. La longitud y ramificación de las cadenas definen sus propiedades.</p>
+                <ul style="margin-top: 15px; padding-left: 20px;">
+                    <li><strong>HDPE (Alta Densidad):</strong> Rígido. Tuberías de agua, cascos, envases de detergente.</li>
+                    <li><strong>LDPE (Baja Densidad):</strong> Flexible. Bolsas de supermercado, film transparente.</li>
+                </ul>
+            </div>
+            
+            <div class="use-card pvc">
+                 <i class="fas fa-hammer card-icon-header"></i>
+                <h3>La Cadena del Cloro (PVC)</h3>
+                <p>Esencial para la construcción moderna. Se produce mediante el "Proceso Balanceado" que es eficiente en energía y recicla subproductos.</p>
+                <p style="margin-top: 10px;"><strong>Usos:</strong> Marcos de ventanas, tuberías sanitarias, suelos vinílicos.</p>
+            </div>
+            
+            <div class="use-card oxide">
+                 <i class="fas fa-tshirt card-icon-header"></i>
+                <h3>Óxido de Etileno</h3>
+                <p>Un intermedio altamente reactivo (y peligroso) crucial para otras industrias.</p>
+                <ul style="margin-top: 15px; padding-left: 20px;">
+                    <li><strong>Etilenglicol:</strong> Anticongelante para motores.</li>
+                    <li><strong>Poliéster (PET):</strong> Fibras para tu ropa deportiva y botellas de bebidas.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="future">
+        <h2><i class="fas fa-shield-alt section-icon"></i>Seguridad y Futuro</h2>
+        <div class="future-container">
+            <div class="future-image">
+                <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1000&auto=format&fit=crop" alt="Refinería sostenible">
+            </div>
+            <div class="future-content">
+                <div class="info-block safety">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <h3>Retos de Seguridad Críticos</h3>
+                        <p>Manejar etileno es luchar contra dos extremos: el fuego y el frío.</p>
+                        <ul>
+                            <li><strong>Metalurgia Criogénica:</strong> El acero al carbono se vuelve quebradizo como el vidrio a -100°C. Se requieren aleaciones especiales de Níquel.</li>
+                            <li><strong>Sistemas de Flare:</strong> Las antorchas de seguridad deben estar siempre listas para quemar el inventario masivo de gas en caso de emergencia.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="info-block eco">
+                    <i class="fas fa-leaf"></i>
+                    <div>
+                        <h3>El Futuro Sostenible</h3>
+                        <p>La industria busca reducir su huella de carbono.</p>
+                        <ul>
+                            <li><strong>E-Cracking:</strong> Reemplazar los hornos de gas por hornos eléctricos alimentados con energía renovable para eliminar emisiones de CO₂.</li>
+                            <li><strong>OCM (Acoplamiento Oxidativo):</strong> Convertir gas natural directamente a etileno, saltándose pasos intermedios.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <span class="footer-logo"><i class="fas fa-university"></i> UTPL</span>
+        <p>Ingeniería Química & Computación</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Octubre 2025 / Febrero 2026 - Basado en el informe técnico final.</p>
+    </footer>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()"><i class="fas fa-times"></i></span>
+            <div class="modal-header">
+                <i id="modalIcon" class="fas fa-cogs"></i>
+                <h3 id="modalTitle">Título</h3>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <span class="badge" style="background: #e0e0e0; color: #333;"><i class="fas fa-tools"></i> <span id="modalOp">Op</span></span>
+                <span class="badge badge-temp"><i class="fas fa-thermometer-half"></i> <span id="modalTemp">Temp</span></span>
+            </div>
+            
+            <p id="modalDesc" style="font-size: 1.1rem; color: #555;">Descripción...</p>
+        </div>
+    </div>
+
+    <script>
+        // Función para cambiar de pestañas (Procesos)
+        function openProcess(evt, processName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("process-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(processName).style.display = "block";
+            setTimeout(() => {
+                 document.getElementById(processName).classList.add("active");
+            }, 10); // Pequeño delay para que la animación CSS funcione
+            
+            evt.currentTarget.className += " active";
+        }
+
+        // Función para abrir el Modal Mejorado
+        function showModal(title, op, temp, desc, iconClass, isGreen) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalOp').innerText = op;
+            document.getElementById('modalTemp').innerText = temp;
+            
+            // Usamos innerHTML para permitir subíndices en la descripción
+            document.getElementById('modalDesc').innerHTML = desc;
+            
+            // Cambiar el icono del modal dinámicamente
+            const modalIcon = document.getElementById('modalIcon');
+            modalIcon.className = 'fas ' + iconClass;
+            modalIcon.style.color = isGreen ? 'var(--bio-green)' : 'var(--primary)';
+            
+            document.getElementById('infoModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = "none";
+        }
+
+        // Cerrar modal si se hace click afuera
+        window.onclick = function(event) {
+            var modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

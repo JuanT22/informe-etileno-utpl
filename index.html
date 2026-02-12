@@ -1,178 +1,359 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para mi niña linda ❤️</title>
-    <style>
-        /* Estilos generales para que parezca de teléfono */
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #ffe4e1; /* Color rosita claro */
-            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
-            overflow: hidden;
-            text-align: center;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>¿Quieres ser mi San Valentín?</title>
+  <style>
+    :root{
+      --bg-start:#ff9a9e;
+      --bg-end:#fad0c4;
+      --card:#fff;
+      --accent:#ff4d6d;
+      --soft:#ffeef0;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(160deg,var(--bg-start),var(--bg-end));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
+    /* Phone-ish container */
+    .phone {
+      width: 380px;
+      max-width:94vw;
+      height: 760px;
+      max-height:92vh;
+      border-radius: 36px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+      border: 6px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+    }
 
-        h1 {
-            color: #d63384;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+    header{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      align-items:center;
+      margin-bottom:12px;
+    }
+    .dot{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.6);}
+    h1{
+      margin:0; font-size:18px; color:white; font-weight:700;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
 
-        .gif-container img {
-            width: 100%;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
+    main{
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), #fff);
+      height:calc(100% - 70px);
+      border-radius: 20px;
+      padding:18px;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
 
-        .buttons {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            position: relative;
-            height: 100px;
-        }
+    .card-title{
+      font-size:22px;
+      margin:0 0 6px 0;
+      color:#333;
+    }
+    .card-sub{
+      margin:0 0 18px 0;
+      color:#666;
+      font-size:14px;
+    }
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-        }
+    .heart{
+      font-size:64px;
+      transform:scale(1);
+      animation: pulse 1.6s infinite;
+      margin-bottom:12px;
+    }
+    @keyframes pulse{
+      0%{ transform:scale(1); }
+      50%{ transform:scale(1.12); }
+      100%{ transform:scale(1); }
+    }
 
-        #yesBtn {
-            background-color: #ff4d6d;
-            color: white;
-        }
+    .btns{
+      display:flex;
+      gap:12px;
+      margin-top:10px;
+      align-items:center;
+    }
 
-        #noBtn {
-            background-color: #adb5bd;
-            color: white;
-            position: absolute; /* Importante para el movimiento */
-        }
+    button{
+      border:0;
+      padding:12px 18px;
+      border-radius:999px;
+      font-size:16px;
+      font-weight:700;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      cursor:pointer;
+      user-select:none;
+      touch-action:manipulation;
+    }
 
-        /* Pantalla final */
-        #celebration {
-            display: none;
-        }
+    .yes{
+      background: linear-gradient(90deg, #ff7a95, #ff4d6d);
+      color:white;
+      min-width:110px;
+    }
 
-        .heart {
-            color: #ff4d6d;
-            font-size: 50px;
-        }
-    </style>
+    .no{
+      background:transparent;
+      color:#ff4d6d;
+      border: 2px solid rgba(255,77,109,0.18);
+      min-width:110px;
+    }
+
+    /* modal overlay (blocking until yes) */
+    .overlay{
+      position:absolute;
+      inset:0;
+      background:transparent;
+      pointer-events:none;
+    }
+
+    /* small playful message area */
+    .note {
+      margin-top:14px;
+      font-size:13px;
+      color:#b44;
+      min-height:20px;
+    }
+
+    /* success screen */
+    .success {
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), #fff);
+      z-index:40;
+      padding:22px;
+      gap:12px;
+      text-align:center;
+      transform:translateY(100%);
+      transition: transform 420ms cubic-bezier(.2,.9,.3,1);
+    }
+    .success.show { transform: translateY(0%); }
+    .success h2 { margin:0; color:var(--accent); font-size:24px; }
+    .success p { margin:0; color:#444; font-size:15px; }
+
+    /* floating hearts */
+    .heart-float {
+      position:absolute;
+      width:22px;
+      height:22px;
+      font-size:22px;
+      pointer-events:none;
+      animation: floatUp 4s linear forwards;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.9); opacity:1; }
+      100% { transform: translateY(-420px) scale(1.2); opacity:0; }
+    }
+
+    /* small responsive tweaks */
+    @media (max-width:420px){
+      .phone{ height:86vh; border-radius:28px; padding:14px; }
+      .heart{ font-size:56px; }
+    }
+  </style>
 </head>
 <body>
+  <div class="phone" role="application" aria-label="Tarjeta de San Valentín">
+    <header>
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <h1>Para la persona que me hace sonreír</h1>
+    </header>
 
-    <div class="container" id="mainContainer">
-        <div id="content">
-            <h1>¿Quieres ser mi San Valentín este año? 🌹✨</h1>
-            <div class="gif-container">
-                <img id="mainGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueGZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/c76IJLufpN61i/giphy.gif" alt="gatito tierno">
-            </div>
-            <div class="buttons">
-                <button id="yesBtn" onclick="celebrate()">¡SÍ!</button>
-                <button id="noBtn" onmouseover="moveNoButton()" onclick="moveNoButton()">No</button>
-            </div>
-        </div>
+    <main>
+      <div class="heart" aria-hidden="true">💗</div>
+      <h2 class="card-title">¿Quieres ser mi San Valentín?</h2>
+      <p class="card-sub">Prometo abrazos, risas y memes malos por 1 año (o más).</p>
 
-        <div id="celebration">
-            <h1 id="happyText">¡SABÍA QUE DIRÍAS QUE SÍ! 😍❤️</h1>
-            <div class="heart">❤️</div>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODFmYmZkY2M5YjVkYmY1YjVkYmY1YjVkYmY1YjVkYmY1YjVkYmYmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/KztT2c4u8mYYUiMKdJ/giphy.gif" width="100%">
-            <p style="color: #d63384; margin-top: 15px;">Te amo mucho, prepárate para el mejor día.</p>
-        </div>
+      <div class="btns" aria-hidden="false">
+        <button class="yes" id="yesBtn">¡Sí, claro! 😍</button>
+        <button class="no" id="noBtn">No... 😅</button>
+      </div>
+
+      <div class="note" id="note"></div>
+    </main>
+
+    <!-- success screen (hidden until yes) -->
+    <div class="success" id="success">
+      <div style="font-size:64px;">🎉💖</div>
+      <h2>¡Dijiste que sí! ✨</h2>
+      <p>Gracias por hacerme la persona más feliz hoy. Te prometo ❤️, aventuras y muchas palomitas.</p>
+      <div style="margin-top:10px;">
+        <button class="yes" id="doneBtn">¡Abrazos ahora! 🤗</button>
+      </div>
     </div>
 
-    <script>
-        let noButtonClickCount = 0;
+    <!-- overlay to trap until yes -->
+    <div class="overlay" id="overlay" aria-hidden="false"></div>
+  </div>
 
-        function moveNoButton() {
-            const noBtn = document.getElementById('noBtn');
-            const yesBtn = document.getElementById('yesBtn');
-            
-            // Hacer el botón de "Sí" más grande cada vez que intente dar al "No"
-            noButtonClickCount++;
-            let currentSize = 18 + (noButtonClickCount * 5);
-            yesBtn.style.fontSize = currentSize + "px";
-            yesBtn.style.padding = (15 + noButtonClickCount * 3) + "px " + (30 + noButtonClickCount * 5) + "px";
+  <script>
+    // Elementos
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const note = document.getElementById('note');
+    const success = document.getElementById('success');
+    const overlay = document.getElementById('overlay');
+    const doneBtn = document.getElementById('doneBtn');
+    const phone = document.querySelector('.phone');
 
-            // Cambiar texto del botón No (gracioso)
-            const phrases = [
-                "¿Segura?", 
-                "Piénsalo bien...", 
-                "Te estás equivocando", 
-                "¡Oye!", 
-                "¡Ni lo sueñes!", 
-                "Andaleee", 
-                "Voy a llorar :("
-            ];
-            noBtn.innerText = phrases[Math.min(noButtonClickCount, phrases.length - 1)];
+    // Evitamos que el overlay se quite: pointer-events en overlay es none (to allow clicks on buttons),
+    // pero usaremos la lógica para impedir cerrar la página sin tocar "Sí".
+    // Movemos el botón "No" a posiciones traviesas y convertimos el clic en un "reintento tierno".
 
-            // Mover el botón "No" a una posición aleatoria
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-        }
+    // Cuando el cursor/touch se acerque, el botón No se mueve
+    function moveNoRandom() {
+      const rect = phone.getBoundingClientRect();
+      const maxX = rect.width - 120; // margen ancho del botón
+      const maxY = rect.height - 180;
+      const x = Math.max(8, Math.random() * maxX);
+      const y = Math.max(120, Math.random() * maxY);
+      noBtn.style.position = 'relative';
+      noBtn.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
+    }
 
-        function celebrate() {
-            document.getElementById('content').style.display = 'none';
-            document.getElementById('celebration').style.display = 'block';
-            document.body.style.backgroundColor = '#ffc1cf';
-            
-            // Efecto de confeti básico (opcional)
-            for (let i = 0; i < 50; i++) {
-                createHeart();
-            }
-        }
+    // Pequeña función que hace corazones flotantes
+    function spawnHeart(xPct = Math.random()*100) {
+      const h = document.createElement('div');
+      h.className = 'heart-float';
+      h.style.left = `${xPct}%`;
+      h.style.bottom = '10px';
+      h.textContent = '💕';
+      phone.appendChild(h);
+      setTimeout(()=> h.remove(), 4200);
+    }
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-particle');
-            heart.innerHTML = '❤️';
-            heart.style.position = 'fixed';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '-10px';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-            document.body.appendChild(heart);
-            
-            setTimeout(() => {
-                heart.remove();
-            }, 5000);
-        }
+    // Secuencia cuando presiona NO
+    function onNoClicked(e){
+      e.preventDefault();
+      // mostrar mensaje tierno y "reintentar"
+      const msgs = [
+        "Pero sin ti Netflix no es lo mismo... 😢",
+        "¿Y quién me dejará robar tus papas fritas? 🍟",
+        "Prometo cocinar (al menos intentarlo) 🥲",
+        "Mis abrazos tienen garantía extendida 😇",
+        "Si dices que no, traigo más flores mañana 🌸"
+      ];
+      // elegir mensaje aleatorio
+      const m = msgs[Math.floor(Math.random()*msgs.length)];
+      note.textContent = m;
 
-        // Estilo de la animación de corazones cayendo
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes fall {
-                to {
-                    transform: translateY(110vh) rotate(360deg);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+      // generar corazones
+      for (let i=0;i<6;i++){
+        setTimeout(()=> spawnHeart(10 + Math.random()*80), i*120);
+      }
+
+      // mover botón NO por travieso
+      moveNoRandom();
+
+      // después de 1.4s, restauramos nota y ponemos un "please" extra
+      setTimeout(()=>{
+        note.textContent = "Inténtalo de nuevo... (yo espero) 💫";
+      }, 1400);
+
+      // si logra hacer click, lo convertimos en un "no aceptado" que no cierra nada:
+      // nada más ocurre; la idea es que la experiencia sea juguetona hasta que pulse "Sí".
+    }
+
+    // Hacemos difícil tocar No en móviles (mientras se mueve al tocar)
+    noBtn.addEventListener('mouseenter', moveNoRandom);
+    noBtn.addEventListener('touchstart', function(e){
+      // en touch, evitamos que el botón sea presionado fácilmente
+      e.preventDefault();
+      moveNoRandom();
+      onNoClicked(e);
+    }, {passive:false});
+    noBtn.addEventListener('click', onNoClicked);
+
+    // Si hace click en Sí -> pantalla de éxito
+    yesBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      note.textContent = "¡Eres la mejor decisión! 💖";
+      success.classList.add('show');
+
+      // lluvia de corazones más intensa
+      for (let i=0;i<18;i++){
+        setTimeout(()=> spawnHeart(5 + Math.random()*90), i*120);
+      }
+
+      // opcional: cambiar título de la ventana (para cuando revise mensajes)
+      document.title = "Dijo que sí 💖";
+    });
+
+    // Botón 'done' cierra la tarjeta (o puede redirigir a un abrazo virtual)
+    doneBtn.addEventListener('click', function(){
+      // Aquí cerramos la tarjeta visualmente (pero sigue en el archivo)
+      success.querySelector('p').textContent = "Te mando un abrazo enorme ahora mismo 🤗";
+      doneBtn.disabled = true;
+      doneBtn.textContent = "¡Abrazando...!";
+    });
+
+    // Pequeño truco: cada pocos segundos hacemos que el "No" se mueva por sí solo
+    setInterval(() => {
+      // solo mueve si no se mostró ya el éxito
+      if (!success.classList.contains('show')) moveNoRandom();
+    }, 2200);
+
+    // Touch friendly: permitir arrastrar el NO con el dedo (pero seguirá siendo juguetón)
+    let dragging = false, startY = 0, startX = 0;
+    noBtn.addEventListener('touchmove', (ev) => {
+      ev.preventDefault();
+      dragging = true;
+      const t = ev.touches[0];
+      const rect = phone.getBoundingClientRect();
+      const x = Math.max(8, Math.min(rect.width - 120, t.clientX - rect.left - 50));
+      const y = Math.max(120, Math.min(rect.height - 180, t.clientY - rect.top - 20));
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }, {passive:false});
+
+    noBtn.addEventListener('touchend', (ev) => {
+      if (dragging) {
+        dragging = false;
+        note.textContent = "Jajaja, casi... 😜";
+        setTimeout(()=> note.textContent = "", 1500);
+        moveNoRandom();
+      }
+    });
+
+    // pequeño bloque para evitar recargas accidentales (la página espera respuesta)
+    window.addEventListener('beforeunload', function (e) {
+      // si ya dijo sí, permitimos salir sin mensaje
+      if (success.classList.contains('show')) return undefined;
+      // si no dijo sí, mostramos mensaje nativo (algunos navegadores ignoran)
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    });
+
+    // enfoque inicial - corazon pulso
+    note.textContent = "Pulsa 'Sí, claro! 😍' si quieres mi corazón ♥";
+    setTimeout(()=> note.textContent = "", 3000);
+  </script>
 </body>
 </html>
